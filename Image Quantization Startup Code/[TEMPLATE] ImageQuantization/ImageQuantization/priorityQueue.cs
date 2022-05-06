@@ -164,7 +164,7 @@ namespace Priority_Queue
             //decrease num of vert and init null
             Vertices[numVertices--] = null;
 
-            //put lvert in right place
+            //put last vert in right place
             VertixUpdated(LVert);
             return v;
         }
