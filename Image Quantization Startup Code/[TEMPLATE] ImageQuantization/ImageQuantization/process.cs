@@ -44,8 +44,8 @@ namespace ImageQuantization
         {
             //calc Weight with EuclideanDistance between 2virtices
             int red_V1, red_V2, green_V1, green_V2, blue_V1, blue_V2;
-            int color1 = (int)V1.vertix;
-            int color2 = (int)V2.vertix;
+            int color1 =Convert.ToInt32(V1.vertix);
+            int color2 = Convert.ToInt32(V2.vertix);
             red_V1 = (byte)(color1);
             red_V2 = (byte)(color2);
             green_V1 = (byte)(color1 >> 8);
@@ -58,11 +58,10 @@ namespace ImageQuantization
                     sum = (float)Math.Sqrt(Math.Abs(d1) + Math.Abs(d2) + Math.Abs(d3));
             return (sum);
         }
+        //list of mst
+        public static List<Edge> MST = new List<Edge>();
         public static float Generate_MST(List<int> DistinctColor)
         {
-            //list of mst
-            List<Edge> MST = new List<Edge>();
-
             //priority queue
             Priority_Queue<Vertix> priorityQueue = new Priority_Queue<Vertix>(DistinctColor.Count);
 
@@ -89,8 +88,8 @@ namespace ImageQuantization
                 Vertix MinVert = priorityQueue.Dequeue();
                 //save edge and add to Mst List
                 Edge edge;
-                edge.first_vertix = (int)MinVert.vertix;
-                edge.second_vertix = (int)(MinVert.Parent);
+                edge.first_vertix = Convert.ToInt32(MinVert.vertix);
+                edge.second_vertix = Convert.ToInt32(MinVert.Parent);
                 edge.weight = (MinVert.Weight);
                 MST.Add(edge);
 
