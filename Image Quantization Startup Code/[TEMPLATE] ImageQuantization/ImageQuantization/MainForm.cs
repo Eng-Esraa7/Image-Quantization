@@ -15,7 +15,7 @@ namespace ImageQuantization
             InitializeComponent();
         }
 
-        RGBPixel[,] ImageMatrix;
+        public static RGBPixel[,] ImageMatrix;
 
         private void btnOpen_Click(object sender, EventArgs e)
         {
@@ -34,16 +34,20 @@ namespace ImageQuantization
         private void btnGaussSmooth_Click(object sender, EventArgs e)
         {
             //first get distinct color
-            List<int> distinct_color = process.DistinctColor(ImageMatrix);
-            dist_txt.Text = distinct_color.Count.ToString();
+            process.DistinctColor();
+            dist_txt.Text = process.DistinctColorList.Count.ToString();
             //second Mst
-            float mst_sum = process.Generate_MST(distinct_color);
+            float mst_sum = process.Generate_MST();
             mst_txt.Text = mst_sum.ToString();
 
             double sigma = double.Parse(txtGaussSigma.Text);
             int maskSize = (int)nudMaskSize.Value ;
             ImageMatrix = ImageOperations.GaussianFilter1D(ImageMatrix, maskSize, sigma);
             ImageOperations.DisplayImage(ImageMatrix, pictureBox2);
+
+            //finally clear lists
+            process.DistinctColorList.Clear();
+            process.MST.Clear();
         }
     }
 }

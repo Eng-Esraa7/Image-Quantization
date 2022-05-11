@@ -6,38 +6,36 @@ using System.Text;
 
 namespace ImageQuantization
 {
-    struct Edge
-    {
-        public int first_vertix;
-        public int second_vertix;
-        public float weight;
-    }
     class process
     {
-        public static List<int> DistinctColor(RGBPixel[,] ImageMatrix)
+        //List of Distinct Color
+        public static List<int> DistinctColorList= new List<int>();
+        public static void DistinctColor()
         {
+            var img = MainForm.ImageMatrix;
             //get width and height of image
-            int w = ImageOperations.GetWidth(ImageMatrix);
-            int h = ImageOperations.GetHeight(ImageMatrix);
+            int w = ImageOperations.GetWidth(img);
+            int h = ImageOperations.GetHeight(img);
+            //List of Distinct Color
+            HashSet<int> dist = new HashSet<int>();
             //calc RGB
             int red, green, blue;
-            //List of Distinct Color
-            List<int> dist = new List<int>();
 
             for (int row = 0; row < h; row++)
             {
                 for (int col = 0; col < w; col++)
                 {
-                    red = ImageMatrix[row, col].red;
-                    green = ImageMatrix[row, col].green;
-                    blue = ImageMatrix[row, col].blue;
+                    red = img[row, col].red;
+                    green = img[row, col].green;
+                    blue = img[row, col].blue;
                     int colorPixel = (blue << 16) + (green << 8) + red;
                     //if not found found before add to list
                     if (!dist.Contains(colorPixel))
                         dist.Add(colorPixel);
                 }
             }
-            return dist.ToList();
+            DistinctColorList = dist.ToList();
+
         }
 
         private static float Weight_EuclideanDistance_2virtices(Vertix V1, Vertix V2)
@@ -58,28 +56,27 @@ namespace ImageQuantization
                     sum = (float)Math.Sqrt(Math.Abs(d1) + Math.Abs(d2) + Math.Abs(d3));
             return (sum);
         }
+
         //list of mst
-        public static List<Edge> MST = new List<Edge>();
-        public static float Generate_MST(List<int> DistinctColor)
+        public static List<Vertix> MST = new List<Vertix>();
+        public static float Generate_MST()
         {
             //priority queue
-            Priority_Queue<Vertix> priorityQueue = new Priority_Queue<Vertix>(DistinctColor.Count);
+            Priority_Queue<Vertix> priorityQueue = new Priority_Queue<Vertix>(DistinctColorList.Count);
 
             //set each vertix with parent
-            Vertix[] queue = new Vertix[DistinctColor.Count];
-
-            //fisrt vertix = first distinct color && parent = null(-1) && weight=0
-            queue[0] = new Vertix(DistinctColor[0], -1,0);
-
-            //put first virtix to queue
-            priorityQueue.Enqueue(queue[0]);
+            Vertix[] queue = new Vertix[DistinctColorList.Count];
 
             //loop on distinct color and put it in queue
-            for (int i = 1; i < DistinctColor.Count; i++)
+            for (int i = 0; i < DistinctColorList.Count; i++)
             {
                 float OO = float.MaxValue;
-                //set weight oo and parent oo
-                priorityQueue.Enqueue(new Vertix(DistinctColor[i], OO,OO));
+                //fisrt vertix = first distinct color && parent = null(-1) && weight=0
+                if (i==0)
+                    priorityQueue.Enqueue(new Vertix(DistinctColorList[i], -1, 0));
+                else
+                    //set weight oo and parent oo
+                    priorityQueue.Enqueue(new Vertix(DistinctColorList[i], OO,OO));
             }
 
             while (true)
@@ -87,13 +84,9 @@ namespace ImageQuantization
                 //get min weight
                 Vertix MinVert = priorityQueue.Dequeue();
                 //save edge and add to Mst List
-                Edge edge;
-                edge.first_vertix = Convert.ToInt32(MinVert.vertix);
-                edge.second_vertix = Convert.ToInt32(MinVert.Parent);
-                edge.weight = (MinVert.Weight);
-                MST.Add(edge);
+                MST.Add(MinVert);
 
-                //loop on queue and set piriority again
+                //loop on queue and set weight again
                 float calcWeight = -1;
                 foreach (var v in priorityQueue)
                 {
@@ -106,17 +99,18 @@ namespace ImageQuantization
                         v.Weight = calcWeight;
                         //set parent
                         v.Parent = MinVert.vertix;
+                        //update graph
                         priorityQueue.VertixUpdated(v);
                     }
                 }
-
+                //not more vertix in queue break
                 if (priorityQueue.Count() == 0)
                     break;
             }
             float weight = 0;
             foreach (var v in MST)
             {
-                weight = weight + v.weight;
+                weight += v.Weight;
             }
             return weight;
         }
