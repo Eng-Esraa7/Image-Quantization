@@ -8,6 +8,92 @@ namespace ImageQuantization
 {
     class process
     {
+        public static HashSet<HashSet<int>> clusters = new HashSet<HashSet<int>>();
+        public static void Cluster(int k)
+        {
+            HashSet<int> Deleteed_set = new HashSet<int>();
+            HashSet<int> Set = new HashSet<int>();
+
+            while (--k != 0) //set max weight edge with -10
+            {
+                float maxweight = -10;
+                int index = -10;
+                //loopinh on edges to get edges with max weight
+                for (int i = 0; i < MST.Count; i++)
+                {
+                    //condition to filter maximum weight
+                    if (MST[i].Weight >= maxweight)
+                    {
+                        // swape to set max_weight at max variable
+                        maxweight = MST[i].Weight;
+                        //save index edge with max weight
+                        index = i;
+                    }
+                }
+                //set weight with abnormal number
+                MST[index].Weight = 0;
+            }
+
+
+            for (int i = 0; i < MST.Count; i++)
+            {
+                //create set with orher edges ->cluster 
+                if (MST[i].Weight == 0)
+                {
+                    // set edges with abnormal weight at cut set then delete its from graph
+                    Deleteed_set.Add((int)MST[i].vertix);
+                    Deleteed_set.Add((int)MST[i].Parent);
+                    // check set count to add to clusre or not
+                    if (Set.Count != 0) //not empty
+                    {
+                        // declare new set to copy set
+                        HashSet<int> Copy_srt = new HashSet<int>();
+                        foreach (var unit in Set)
+                        {
+                            Copy_srt.Add(unit);
+                        }
+                        clusters.Add(Copy_srt);
+                    }
+                    //clear old set (clean to re fill it)
+                    Set.Clear();
+                }
+                else //==0 with max edge
+                {
+                    // add its as a set to cluster
+                    Set.Add((int)MST[i].vertix);
+                    Set.Add((int)MST[i].Parent);
+                }
+            }
+            if (Set.Count != 0)
+            {
+                clusters.Add(Set);
+            }
+            // add athor sets to cluster
+            foreach (var vertic in Deleteed_set) // set with max weight
+            {
+                int f = 0;
+                foreach (var set in clusters)
+                {
+                    //if cluster contain deleted set element do nothing else added it ->cluster
+                    if (set.Contains(vertic))
+                    {
+                        f = 1;
+                        break;
+                    }
+
+                }
+                // not found
+                if (f == 0)
+                {
+                    HashSet<int> s = new HashSet<int>();
+                    // set of set
+                    s.Add(vertic);
+                    //hash set of hash set
+                    clusters.Add(s);
+                }
+            }
+            
+        }
         //List of Distinct Color
         public static List<int> DistinctColorList= new List<int>();
         public static void DistinctColor()

@@ -48,6 +48,8 @@ namespace ImageQuantization
             this.label8 = new System.Windows.Forms.Label();
             this.dist_txt = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
+            this.K_value = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudMaskSize)).BeginInit();
@@ -267,11 +269,30 @@ namespace ImageQuantization
             this.label7.TabIndex = 21;
             this.label7.Text = "Distinct Color";
             // 
+            // K_value
+            // 
+            this.K_value.Location = new System.Drawing.Point(62, 465);
+            this.K_value.Name = "K_value";
+            this.K_value.Size = new System.Drawing.Size(100, 20);
+            this.K_value.TabIndex = 25;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.Location = new System.Drawing.Point(67, 428);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(82, 20);
+            this.label9.TabIndex = 26;
+            this.label9.Text = "K Cluster";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(904, 500);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.K_value);
             this.Controls.Add(this.mst_txt);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.dist_txt);
@@ -326,6 +347,8 @@ namespace ImageQuantization
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox dist_txt;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox K_value;
+        private System.Windows.Forms.Label label9;
     }
 }
 
