@@ -8,14 +8,15 @@ namespace Priority_Queue
     public class Vertix
     {
         //weight of vertix
-        public float Weight;
+        public double Weight;
         //ind of vertix added in queue
         public int ind_added;
-        //vertix
-        public float vertix;
-        //parent
-        public float Parent;
-        public Vertix(float v, float p, float w)
+        //vertix || first vertix
+        public double vertix;
+        //parent || second vertix
+        public double Parent;
+        //constractor to set vertix, parent and weight
+        public Vertix(double v, double p, double w)
         {
             vertix = v;
             Parent = p;
@@ -37,6 +38,7 @@ namespace Priority_Queue
             numVertices = 0;
             Vertices = new Virtex[++Num_DistinctColor];
         }
+        //to enable foreach on list of vertices
         public IEnumerator<Virtex> GetEnumerator()
         {
             for (int i = 1; i <= numVertices; i++)
@@ -69,7 +71,7 @@ namespace Priority_Queue
             //get parent
             int p = v.ind_added / 2;
             Virtex pV = Vertices[p];
-            //while not reach to parent
+            //while reach to parent
             while (p > 0)
             {
                 bool ret = heapify(v, pV, p);
@@ -81,7 +83,7 @@ namespace Priority_Queue
         private bool heapify(Virtex v, Virtex pV, int p)
         {
             pV = Vertices[p];
-            if (HighWeight(v, pV) == false)
+            if (HighWeight(v, pV) == false) //if v has lower weight swap to move up
             {
                 Swap(v, pV);
                 return false;
@@ -96,7 +98,7 @@ namespace Priority_Queue
             Vertices[++numVertices] = v;
             //save ind
             v.ind_added = numVertices;
-            //pit it in right place
+            //put it in right place
             Max_Heap(v);
         }
         private void Min_Heap(Virtex v)
@@ -148,7 +150,7 @@ namespace Priority_Queue
 
             if (p > 0)
             {
-                if (HighWeight(pV, v) == true)
+                if (HighWeight(pV, v) == true) //put vertix in right place
                     Max_Heap(v);
             }
             else
@@ -157,6 +159,7 @@ namespace Priority_Queue
 
         public Virtex Dequeue()
         {
+            //min weight
             Virtex v = Vertices[1];
             //Swap the vertix with the last vertix
             Virtex LVert = Vertices[numVertices];
